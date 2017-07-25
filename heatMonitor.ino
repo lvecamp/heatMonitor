@@ -1,4 +1,3 @@
-
 #include <ESP8266WiFi.h>
 #include <ESP8266mDNS.h>
 #include <WiFiUdp.h>
@@ -22,7 +21,7 @@ RemoteDebug Debug;
 void setup() {
   // use Serial (port 0); initialize Modbus communication baud rate
   Serial.begin(38400);
-  Serial.setTimeout(100);
+ // Serial.setTimeout(100);
 
   // communicate with Modbus slave ID 1 over Serial (port 0)
  // node.begin(1, Serial);
@@ -48,7 +47,7 @@ void loop() {
   
   byte message[] = {0x43, 0x01, 0x00, 0x03, 0x02 };
   
-  if ((millis() - mLastTime) >= 1000) {
+  if ((millis() - mLastTime) >= 2000) {
 
     // Time
 
@@ -62,13 +61,17 @@ void loop() {
 
     while (Serial.available() > 0) {
       // read the incoming byte:
-//      data[indexData]= Serial.read();
-//      indexData++;
-      incomingString = Serial.readString();
+      data[indexData]= Serial.read();
+      indexData++;
+//      incomingString = Serial.readString();
     }
- 
-    Debug.println(incomingString);
-     
+
+    if (indexData > 0){
+      Debug.printf("Number of bytes received: %d\n", indexData);
+      Debug.printf("%s %s %s %s %s %s %s %s %s %s \n", data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9]);
+      Debug.println("\n");
+      indexData = 0; 
+    }
   }
     
 
